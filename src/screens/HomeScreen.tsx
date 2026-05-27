@@ -1,12 +1,17 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { PostItem } from '../components/PostItem';
 import { StoryBar } from '../components/StoryBar';
 import { useListagramStore } from '../store';
+import { moderateScale, scale, verticalScale } from '../utils/responsive';
 
 export const HomeScreen: React.FC = () => {
-  const { reels, loadReels, networkStatus } = useListagramStore();
+  const { reels, loadReels, networkStatus, notifications } = useListagramStore();
+  const router = useRouter();
+
+  const unreadNotifications = notifications.filter(n => !n.read).length;
 
   useEffect(() => {
     loadReels();
@@ -16,8 +21,8 @@ export const HomeScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       {/* Top Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton}>
-          <MaterialCommunityIcons name="plus-box-outline" size={28} color="#fff" />
+        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/upload')}>
+          <MaterialCommunityIcons name="plus-box-outline" size={moderateScale(28)} color="#fff" />
         </TouchableOpacity>
         
         <View style={styles.logoContainer}>
@@ -25,11 +30,14 @@ export const HomeScreen: React.FC = () => {
         </View>
 
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButton}>
-            <MaterialCommunityIcons name="heart-outline" size={26} color="#fff" />
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/notifications')}>
+            <MaterialCommunityIcons name="heart-outline" size={moderateScale(26)} color="#fff" />
+            {unreadNotifications > 0 && (
+              <View style={styles.badge} />
+            )}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButtonRight}>
-            <MaterialCommunityIcons name="facebook-messenger" size={26} color="#fff" />
+          <TouchableOpacity style={styles.iconButtonRight} onPress={() => router.push('/messages')}>
+            <MaterialCommunityIcons name="facebook-messenger" size={moderateScale(26)} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
@@ -50,7 +58,7 @@ export const HomeScreen: React.FC = () => {
       {/* Mesh Status Mini Indicator */}
       {!networkStatus.isOnline && networkStatus.isConnectedToMesh && (
         <View style={styles.meshIndicator}>
-          <MaterialCommunityIcons name="wifi-star" size={14} color="#fff" />
+          <MaterialCommunityIcons name="wifi-star" size={moderateScale(14)} color="#fff" />
           <Text style={styles.meshText}>Mesh Active</Text>
         </View>
       )}
@@ -67,8 +75,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: scale(15),
+    paddingVertical: verticalScale(10),
     backgroundColor: '#000',
   },
   logoContainer: {
@@ -77,7 +85,7 @@ const styles = StyleSheet.create({
   },
   logoText: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: moderateScale(24),
     fontWeight: 'bold',
     fontStyle: 'italic',
   },
@@ -86,14 +94,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconButton: {
-    padding: 2,
+    padding: scale(2),
   },
   iconButtonRight: {
-    marginLeft: 15,
-    padding: 2,
+    marginLeft: scale(15),
+    padding: scale(2),
+  },
+  badge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: scale(10),
+    height: scale(10),
+    borderRadius: scale(5),
+    backgroundColor: '#ff3d00',
+    borderWidth: 2,
+    borderColor: '#000',
   },
   emptyContainer: {
-    padding: 50,
+    padding: verticalScale(50),
     alignItems: 'center',
   },
   emptyText: {
@@ -101,20 +120,20 @@ const styles = StyleSheet.create({
   },
   meshIndicator: {
     position: 'absolute',
-    bottom: 10,
-    right: 10,
+    bottom: verticalScale(10),
+    right: scale(10),
     backgroundColor: '#e91e63',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 10,
+    paddingHorizontal: scale(8),
+    paddingVertical: verticalScale(4),
+    borderRadius: scale(10),
     flexDirection: 'row',
     alignItems: 'center',
     opacity: 0.8,
   },
   meshText: {
     color: '#fff',
-    fontSize: 10,
+    fontSize: moderateScale(10),
     fontWeight: 'bold',
-    marginLeft: 4,
+    marginLeft: scale(4),
   },
 });

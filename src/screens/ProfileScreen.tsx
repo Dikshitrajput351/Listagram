@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-    Dimensions,
     FlatList,
     SafeAreaView,
     StyleSheet,
@@ -10,18 +10,20 @@ import {
     View
 } from 'react-native';
 import { useListagramStore } from '../store';
-
-const { width } = Dimensions.get('window');
+import { moderateScale, scale, SCREEN_WIDTH, verticalScale } from '../utils/responsive';
 
 export const ProfileScreen: React.FC = () => {
-  const { currentUser, followingIds, reels, switchAccount, accounts } = useListagramStore();
+  const { currentUser, followingIds, reels, switchAccount, accounts, notifications } = useListagramStore();
+  const router = useRouter();
   const myReels = reels.filter((reel) => reel.userId === currentUser.id);
   const myReelCount = myReels.length;
+
+  const unreadNotifications = notifications.filter(n => !n.read).length;
 
   const renderPostItem = ({ item }: { item: any }) => (
     <TouchableOpacity style={styles.postItem}>
       <View style={styles.postPlaceholder}>
-        <MaterialCommunityIcons name="play" size={32} color="rgba(255,255,255,0.5)" />
+        <MaterialCommunityIcons name="play" size={moderateScale(32)} color="rgba(255,255,255,0.5)" />
       </View>
     </TouchableOpacity>
   );
@@ -38,14 +40,20 @@ export const ProfileScreen: React.FC = () => {
           }
         }}>
           <Text style={styles.headerTitle}>{currentUser.name}</Text>
-          <MaterialCommunityIcons name="chevron-down" size={18} color="#fff" />
+          <MaterialCommunityIcons name="chevron-down" size={moderateScale(18)} color="#fff" />
         </TouchableOpacity>
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.headerIcon}>
-            <MaterialCommunityIcons name="plus-box-outline" size={28} color="#fff" />
+          <TouchableOpacity style={styles.headerIcon} onPress={() => router.push('/upload')}>
+            <MaterialCommunityIcons name="plus-box-outline" size={moderateScale(28)} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.headerIcon} onPress={() => router.push('/notifications')}>
+            <MaterialCommunityIcons name="heart-outline" size={moderateScale(28)} color="#fff" />
+            {unreadNotifications > 0 && (
+              <View style={styles.badge} />
+            )}
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerIcon}>
-            <MaterialCommunityIcons name="menu" size={28} color="#fff" />
+            <MaterialCommunityIcons name="menu" size={moderateScale(28)} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
@@ -57,7 +65,7 @@ export const ProfileScreen: React.FC = () => {
             <View style={styles.profileInfo}>
               <View style={styles.avatarContainer}>
                 <View style={styles.avatar}>
-                  <MaterialCommunityIcons name="account" size={50} color="#fff" />
+                  <MaterialCommunityIcons name="account" size={moderateScale(50)} color="#fff" />
                 </View>
               </View>
 
@@ -92,20 +100,20 @@ export const ProfileScreen: React.FC = () => {
                 <Text style={styles.buttonText}>Share Profile</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.smallButton}>
-                <MaterialCommunityIcons name="account-plus-outline" size={20} color="#fff" />
+                <MaterialCommunityIcons name="account-plus-outline" size={moderateScale(20)} color="#fff" />
               </TouchableOpacity>
             </View>
 
             {/* Tabs */}
             <View style={styles.tabsContainer}>
               <TouchableOpacity style={[styles.tabItem, styles.activeTab]}>
-                <MaterialCommunityIcons name="grid" size={24} color="#fff" />
+                <MaterialCommunityIcons name="grid" size={moderateScale(24)} color="#fff" />
               </TouchableOpacity>
               <TouchableOpacity style={styles.tabItem}>
-                <MaterialCommunityIcons name="movie-outline" size={24} color="#888" />
+                <MaterialCommunityIcons name="movie-outline" size={moderateScale(24)} color="#888" />
               </TouchableOpacity>
               <TouchableOpacity style={styles.tabItem}>
-                <MaterialCommunityIcons name="account-outline" size={24} color="#888" />
+                <MaterialCommunityIcons name="account-outline" size={moderateScale(24)} color="#888" />
               </TouchableOpacity>
             </View>
           </>
@@ -117,7 +125,7 @@ export const ProfileScreen: React.FC = () => {
         contentContainerStyle={styles.postGrid}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <MaterialCommunityIcons name="camera-outline" size={64} color="#333" />
+            <MaterialCommunityIcons name="camera-outline" size={moderateScale(64)} color="#333" />
             <Text style={styles.emptyText}>No Posts Yet</Text>
           </View>
         }
@@ -135,8 +143,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: scale(16),
+    paddingVertical: verticalScale(10),
   },
   headerTitleContainer: {
     flexDirection: 'row',
@@ -144,28 +152,41 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#fff',
-    fontSize: 22,
+    fontSize: moderateScale(22),
     fontWeight: 'bold',
   },
   headerIcons: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   headerIcon: {
-    marginLeft: 20,
+    marginLeft: scale(15),
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: scale(10),
+    height: scale(10),
+    borderRadius: scale(5),
+    backgroundColor: '#ff3d00',
+    borderWidth: 2,
+    borderColor: '#000',
   },
   profileInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 10,
+    paddingHorizontal: scale(16),
+    paddingTop: verticalScale(10),
   },
   avatarContainer: {
-    marginRight: 30,
+    marginRight: scale(30),
   },
   avatar: {
-    width: 86,
-    height: 86,
-    borderRadius: 43,
+    width: scale(86),
+    height: scale(86),
+    borderRadius: scale(43),
     backgroundColor: '#262626',
     justifyContent: 'center',
     alignItems: 'center',
@@ -176,82 +197,82 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingRight: 10,
+    paddingRight: scale(10),
   },
   statItem: {
     alignItems: 'center',
   },
   statNumber: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: moderateScale(18),
     fontWeight: 'bold',
   },
   statLabel: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
   },
   bioContainer: {
-    paddingHorizontal: 16,
-    marginTop: 12,
+    paddingHorizontal: scale(16),
+    marginTop: verticalScale(12),
   },
   displayName: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: 'bold',
   },
   bioText: {
     color: '#fff',
-    fontSize: 14,
-    marginTop: 2,
+    fontSize: moderateScale(14),
+    marginTop: verticalScale(2),
   },
   buttonContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    marginTop: 15,
-    gap: 8,
+    paddingHorizontal: scale(16),
+    marginTop: verticalScale(15),
+    gap: scale(8),
   },
   mainButton: {
     flex: 1,
-    height: 35,
+    height: verticalScale(35),
     backgroundColor: '#262626',
-    borderRadius: 8,
+    borderRadius: scale(8),
     justifyContent: 'center',
     alignItems: 'center',
   },
   smallButton: {
-    width: 35,
-    height: 35,
+    width: verticalScale(35),
+    height: verticalScale(35),
     backgroundColor: '#262626',
-    borderRadius: 8,
+    borderRadius: scale(8),
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: '600',
   },
   tabsContainer: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: verticalScale(20),
     borderBottomWidth: 0.5,
     borderBottomColor: '#262626',
   },
   tabItem: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: verticalScale(12),
   },
   activeTab: {
     borderBottomWidth: 2,
     borderBottomColor: '#fff',
   },
   postGrid: {
-    paddingBottom: 20,
+    paddingBottom: verticalScale(20),
   },
   postItem: {
-    width: width / 3,
-    height: width / 3,
+    width: SCREEN_WIDTH / 3,
+    height: SCREEN_WIDTH / 3,
     padding: 1,
   },
   postPlaceholder: {
@@ -261,13 +282,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyContainer: {
-    marginTop: 100,
+    marginTop: verticalScale(100),
     alignItems: 'center',
   },
   emptyText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: moderateScale(20),
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: verticalScale(10),
   },
 });

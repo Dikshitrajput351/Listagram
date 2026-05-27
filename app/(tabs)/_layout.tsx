@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { moderateScale } from '../../src/utils/responsive';
 
 export default function TabLayout() {
   return (
@@ -18,28 +19,46 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={30} name="home-variant" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="home-variant" color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={30} name="magnify" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="magnify" color={color} />,
         }}
       />
       <Tabs.Screen
         name="reels"
         options={{
           title: 'Reels',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={30} name="movie-play-outline" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="movie-play-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={30} name="account-circle-outline" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="account-circle-outline" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="messages"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="upload"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

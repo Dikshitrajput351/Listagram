@@ -2,6 +2,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useListagramStore } from '../store';
+import { moderateScale, scale, verticalScale } from '../utils/responsive';
 
 export const StoryBar: React.FC = () => {
   const { stories } = useListagramStore();
@@ -17,10 +18,10 @@ export const StoryBar: React.FC = () => {
         <TouchableOpacity style={styles.storyItem}>
           <View style={[styles.avatarContainer, styles.myStoryContainer]}>
             <View style={styles.avatar}>
-              <MaterialCommunityIcons name="account" size={32} color="#fff" />
+              <MaterialCommunityIcons name="account" size={moderateScale(32)} color="#fff" />
             </View>
             <View style={styles.addIcon}>
-              <MaterialCommunityIcons name="plus" size={14} color="#fff" />
+              <MaterialCommunityIcons name="plus" size={moderateScale(14)} color="#fff" />
             </View>
           </View>
           <Text style={styles.storyName}>Your story</Text>
@@ -31,7 +32,7 @@ export const StoryBar: React.FC = () => {
           <TouchableOpacity key={user.id} style={styles.storyItem}>
             <View style={styles.avatarBorder}>
               <View style={styles.avatar}>
-                <MaterialCommunityIcons name="account" size={32} color="#fff" />
+                <MaterialCommunityIcons name="account" size={moderateScale(32)} color="#fff" />
               </View>
             </View>
             <Text style={styles.storyName} numberOfLines={1}>
@@ -46,42 +47,42 @@ export const StoryBar: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
+    paddingVertical: verticalScale(10),
     borderBottomWidth: 0.5,
     borderBottomColor: '#222',
     backgroundColor: '#000',
   },
   scrollContent: {
-    paddingHorizontal: 15,
+    paddingHorizontal: scale(15),
   },
   storyItem: {
     alignItems: 'center',
-    marginRight: 15,
-    width: 70,
+    marginRight: scale(15),
+    width: scale(70),
   },
   avatarContainer: {
     position: 'relative',
   },
   avatarBorder: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
+    width: scale(68),
+    height: scale(68),
+    borderRadius: scale(34),
     borderWidth: 2,
     borderColor: '#e91e63', // Instagram-like story color
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 2,
+    padding: scale(2),
   },
   myStoryContainer: {
-    width: 68,
-    height: 68,
+    width: scale(68),
+    height: scale(68),
     justifyContent: 'center',
     alignItems: 'center',
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: scale(60),
+    height: scale(60),
+    borderRadius: scale(30),
     backgroundColor: '#222',
     justifyContent: 'center',
     alignItems: 'center',
@@ -91,9 +92,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     backgroundColor: '#0095f6',
-    borderRadius: 10,
-    width: 20,
-    height: 20,
+    borderRadius: scale(10),
+    width: scale(20),
+    height: scale(20),
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   },
   storyName: {
     color: '#fff',
-    fontSize: 11,
-    marginTop: 5,
+    fontSize: moderateScale(11),
+    marginTop: verticalScale(5),
   },
 });

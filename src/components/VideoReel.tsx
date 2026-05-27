@@ -4,7 +4,6 @@ import { VideoView, useVideoPlayer } from 'expo-video';
 import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
-    Dimensions,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -12,8 +11,7 @@ import {
 } from 'react-native';
 import { useListagramStore } from '../store';
 import { Reel } from '../types';
-
-const { height, width } = Dimensions.get('window');
+import { moderateScale, scale, SCREEN_HEIGHT, SCREEN_WIDTH, verticalScale } from '../utils/responsive';
 
 interface VideoReelProps {
   reel?: Reel | null;
@@ -28,6 +26,18 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
   const { likeReel, unlikeReel, toggleFollowUser, followingIds } = useListagramStore();
+
+  const getFilterColor = (filter?: string) => {
+    switch (filter) {
+      case 'Clarendon': return 'rgba(0, 150, 255, 0.1)';
+      case 'Gingham': return 'rgba(255, 255, 255, 0.1)';
+      case 'Moon': return 'rgba(0, 0, 0, 0.2)';
+      case 'Lark': return 'rgba(255, 200, 0, 0.1)';
+      case 'Reyes': return 'rgba(255, 255, 200, 0.1)';
+      case 'Juno': return 'rgba(255, 100, 100, 0.1)';
+      default: return 'transparent';
+    }
+  };
 
   const videoSource = reel?.localVideoUrl ? { uri: reel.localVideoUrl } : (reel?.videoUrl ? { uri: reel.videoUrl } : null);
 
@@ -109,7 +119,7 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
   if (!reel) {
     return (
       <View style={styles.container}>
-        <Text style={{ color: '#fff', textAlign: 'center', marginTop: height / 2 }}>
+        <Text style={{ color: '#fff', textAlign: 'center', marginTop: SCREEN_HEIGHT / 2 }}>
           Loading video...
         </Text>
       </View>
@@ -120,7 +130,7 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
     return (
       <View style={styles.container}>
         <View style={styles.errorContainer}>
-          <MaterialCommunityIcons name="alert" size={48} color="#ff9800" />
+          <MaterialCommunityIcons name="alert" size={moderateScale(48)} color="#ff9800" />
           <Text style={styles.errorText}>Failed to load video</Text>
           <Text style={styles.errorSubText}>{reel.title}</Text>
         </View>
@@ -131,13 +141,18 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
   return (
     <View style={styles.container}>
       {reel && player ? (
-        <VideoView
-          player={player}
-          style={styles.video}
-          nativeControls={false}
-          contentFit="cover"
-          allowsPictureInPicture={false}
-        />
+        <View style={styles.videoWrapper}>
+          <VideoView
+            player={player}
+            style={styles.video}
+            nativeControls={false}
+            contentFit="cover"
+            allowsPictureInPicture={false}
+          />
+          {reel.filter && (
+            <View style={[styles.filterOverlay, { backgroundColor: getFilterColor(reel.filter) }]} />
+          )}
+        </View>
       ) : (
         <View style={[styles.video, styles.placeholder]}>
           <Text style={{ color: '#fff', textAlign: 'center' }}>
@@ -160,7 +175,7 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
       >
         <MaterialCommunityIcons
           name={isPlaying ? 'pause-circle' : 'play-circle'}
-          size={60}
+          size={moderateScale(60)}
           color="#fff"
         />
       </TouchableOpacity>
@@ -172,7 +187,7 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
           <View style={styles.userInfo}>
             <View style={styles.userHeader}>
               <View style={styles.avatarPlaceholder}>
-                <MaterialCommunityIcons name="account" size={24} color="#fff" />
+                <MaterialCommunityIcons name="account" size={moderateScale(24)} color="#fff" />
               </View>
               <Text style={styles.userName}>{reel.userName}</Text>
               <TouchableOpacity 
@@ -191,6 +206,12 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
             <Text style={styles.description} numberOfLines={2}>
               {reel.description}
             </Text>
+            {reel.musicTitle && (
+              <View style={styles.musicContainer}>
+                <MaterialCommunityIcons name="music" size={moderateScale(14)} color="#fff" />
+                <Text style={styles.musicText} numberOfLines={1}>{reel.musicTitle}</Text>
+              </View>
+            )}
           </View>
 
           {/* Action Buttons (Right side) */}
@@ -203,7 +224,7 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
             >
               <MaterialCommunityIcons
                 name={reel.liked ? 'heart' : 'heart-outline'}
-                size={35}
+                size={moderateScale(35)}
                 color={reel.liked ? '#ff3d00' : '#fff'}
               />
               <Text style={styles.actionText}>{reel.likes}</Text>
@@ -215,19 +236,19 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
               onPress={() => router.push('/messages' as any)}
               activeOpacity={0.7}
             >
-              <MaterialCommunityIcons name="comment-outline" size={32} color="#fff" />
+              <MaterialCommunityIcons name="comment-outline" size={moderateScale(32)} color="#fff" />
               <Text style={styles.actionText}>{reel.comments}</Text>
             </TouchableOpacity>
 
             {/* Share Button */}
             <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
-              <MaterialCommunityIcons name="share-variant-outline" size={32} color="#fff" />
+              <MaterialCommunityIcons name="share-variant-outline" size={moderateScale(32)} color="#fff" />
               <Text style={styles.actionText}>{reel.shares}</Text>
             </TouchableOpacity>
 
             {/* Menu Button */}
             <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
-              <MaterialCommunityIcons name="dots-horizontal" size={30} color="#fff" />
+              <MaterialCommunityIcons name="dots-horizontal" size={moderateScale(30)} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -250,14 +271,22 @@ export const VideoReel: React.FC<VideoReelProps> = ({ reel, isActive }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width,
-    height,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
     backgroundColor: '#000',
     position: 'relative',
+  },
+  videoWrapper: {
+    width: '100%',
+    height: '100%',
   },
   video: {
     width: '100%',
     height: '100%',
+  },
+  filterOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    pointerEvents: 'none',
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -278,21 +307,21 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: moderateScale(18),
     fontWeight: 'bold',
-    marginTop: 16,
+    marginTop: verticalScale(16),
   },
   errorSubText: {
     color: '#999',
-    fontSize: 14,
-    marginTop: 8,
+    fontSize: moderateScale(14),
+    marginTop: verticalScale(8),
   },
   playButton: {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    marginLeft: -30,
-    marginTop: -30,
+    marginLeft: scale(-30),
+    marginTop: verticalScale(-30),
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -301,77 +330,85 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     flexDirection: 'row',
-    paddingHorizontal: 12,
-    paddingBottom: 25, // Lowered for better reach
+    paddingHorizontal: scale(12),
+    paddingBottom: verticalScale(25), // Lowered for better reach
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
   userInfo: {
     flex: 1,
-    marginRight: 12,
-    paddingBottom: 5,
-  },
-  userNameSection: {
-    flex: 1,
+    marginRight: scale(12),
+    paddingBottom: verticalScale(5),
   },
   userName: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: moderateScale(15),
     fontWeight: 'bold',
-    marginRight: 10,
+    marginRight: scale(10),
   },
   userHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: verticalScale(10),
   },
   avatarPlaceholder: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: scale(32),
+    height: scale(32),
+    borderRadius: scale(16),
     backgroundColor: '#333',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: scale(10),
     borderWidth: 1,
     borderColor: '#fff',
   },
   followButtonSmall: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(4),
+    borderRadius: scale(6),
     borderWidth: 1,
     borderColor: '#fff',
   },
   followButtonText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: moderateScale(12),
     fontWeight: 'bold',
   },
   title: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: '500',
-    marginBottom: 4,
+    marginBottom: verticalScale(4),
   },
   description: {
     color: '#fff',
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: moderateScale(14),
+    marginBottom: verticalScale(8),
+  },
+  musicContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: scale(5),
+    marginTop: verticalScale(5),
+  },
+  musicText: {
+    color: '#fff',
+    fontSize: moderateScale(13),
+    fontWeight: '500',
   },
   actionButtons: {
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingBottom: 10,
+    paddingBottom: verticalScale(10),
   },
   actionButton: {
-    marginBottom: 15,
+    marginBottom: verticalScale(15),
     alignItems: 'center',
   },
   actionText: {
     color: '#fff',
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: moderateScale(12),
+    marginTop: verticalScale(2),
     fontWeight: '600',
   },
   progressBar: {

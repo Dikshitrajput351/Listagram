@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { meshNetworkService } from '../services/MeshNetworkService';
 import { messageService } from '../services/MessageService';
 import { reelDataService } from '../services/ReelDataService';
-import { Conversation, NetworkStatus, Reel, User } from '../types';
+import { Conversation, NetworkStatus, Notification, Reel, User } from '../types';
 
 interface ListagramStore {
   // Reel state
@@ -23,6 +23,9 @@ interface ListagramStore {
   conversations: Conversation[];
   currentConversationId: string | null;
   messageDraft: string;
+
+  // Notifications state
+  notifications: Notification[];
 
   // Upload state
   isUploading: boolean;
@@ -45,6 +48,8 @@ interface ListagramStore {
   setMessageDraft: (text: string) => void;
   sendMessage: (conversationId: string, text: string) => void;
   addNewReel: (reel: Omit<Reel, 'id' | 'createdAt' | 'likes' | 'comments' | 'shares'>) => Promise<void>;
+  addNotification: (notification: Notification) => void;
+  markNotificationsAsRead: () => void;
 }
 
 export const useListagramStore = create<ListagramStore>((set, get) => ({
@@ -64,6 +69,26 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
   conversations: messageService.getConversations(),
   currentConversationId: null,
   messageDraft: '',
+  notifications: [
+    {
+      id: '1',
+      type: 'follow',
+      userId: 'user-2',
+      userName: 'Alex Rivers',
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+      read: false,
+    },
+    {
+      id: '2',
+      type: 'like',
+      userId: 'user-3',
+      userName: 'Sam Smith',
+      reelId: 'reel-1',
+      reelTitle: 'Morning Coffee',
+      timestamp: new Date(Date.now() - 7200000).toISOString(),
+      read: true,
+    }
+  ],
   isUploading: false,
   isRegistered: false,
   stories: messageService.getUsers(),
@@ -89,10 +114,25 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
 
   likeReel: async (reelId: string) => {
     await reelDataService.likeReel(reelId);
+    const reel = get().reels.find(r => r.id === reelId);
     const reels = get().reels.map((reel) =>
       reel.id === reelId ? { ...reel, liked: true, likes: reel.likes + 1 } : reel
     );
     set({ reels });
+
+    // Simulation: Add a notification if someone else's reel was liked
+    if (reel && reel.userId !== get().currentUser.id) {
+      get().addNotification({
+        id: Math.random().toString(36).substr(2, 9),
+        type: 'like',
+        userId: 'some-user-id',
+        userName: 'Someone',
+        reelId: reel.id,
+        reelTitle: reel.title,
+        timestamp: new Date().toISOString(),
+        read: false,
+      });
+    }
   },
 
   unlikeReel: async (reelId: string) => {
@@ -139,6 +179,8 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
       ? get().followingIds.filter((id) => id !== userId)
       : [...get().followingIds, userId];
 
+    const targetUser = get().users.find(u => u.id === userId);
+
     const updateFollowers = (user: User) =>
       user.id === userId
         ? {
@@ -153,6 +195,18 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
       users: get().users.map(updateFollowers),
       accounts: get().accounts.map(updateFollowers),
     });
+
+    // Simulation: If I follow someone, show a follow notification for demo
+    if (!isAlreadyFollowing && targetUser) {
+      get().addNotification({
+        id: Math.random().toString(36).substr(2, 9),
+        type: 'follow',
+        userId: targetUser.id,
+        userName: targetUser.name,
+        timestamp: new Date().toISOString(),
+        read: false,
+      });
+    }
   },
 
   startConversation: (participantId: string) => {
@@ -195,6 +249,16 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
       console.error('Failed to upload reel:', error);
       set({ isUploading: false });
     }
+  },
+
+  addNotification: (notification) => {
+    set({ notifications: [notification, ...get().notifications] });
+  },
+
+  markNotificationsAsRead: () => {
+    set({
+      notifications: get().notifications.map(n => ({ ...n, read: true }))
+    });
   },
 }));
 

@@ -2,6 +2,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Reel } from '../types';
+import { moderateScale, scale, verticalScale } from '../utils/responsive';
 
 interface PostItemProps {
   post: Reel;
@@ -16,19 +17,19 @@ export const PostItem: React.FC<PostItemProps> = ({ post }) => {
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatar}>
-            <MaterialCommunityIcons name="account" size={20} color="#fff" />
+            <MaterialCommunityIcons name="account" size={moderateScale(20)} color="#fff" />
           </View>
           <Text style={styles.userName}>{post.userName}</Text>
         </View>
         <TouchableOpacity>
-          <MaterialCommunityIcons name="dots-vertical" size={20} color="#fff" />
+          <MaterialCommunityIcons name="dots-vertical" size={moderateScale(20)} color="#fff" />
         </TouchableOpacity>
       </View>
 
       {/* Image / Video Placeholder */}
       <View style={styles.mediaContainer}>
         <View style={styles.mediaPlaceholder}>
-          <MaterialCommunityIcons name="image-outline" size={50} color="#333" />
+          <MaterialCommunityIcons name="image-outline" size={moderateScale(50)} color="#333" />
           <Text style={styles.placeholderText}>Image / Video Post</Text>
         </View>
       </View>
@@ -39,20 +40,20 @@ export const PostItem: React.FC<PostItemProps> = ({ post }) => {
           <TouchableOpacity onPress={() => setLiked(!liked)}>
             <MaterialCommunityIcons
               name={liked ? 'heart' : 'heart-outline'}
-              size={26}
+              size={moderateScale(26)}
               color={liked ? '#ff3d00' : '#fff'}
               style={styles.actionIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity>
-            <MaterialCommunityIcons name="comment-outline" size={24} color="#fff" style={styles.actionIcon} />
+            <MaterialCommunityIcons name="comment-outline" size={moderateScale(24)} color="#fff" style={styles.actionIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <MaterialCommunityIcons name="share-variant-outline" size={24} color="#fff" style={styles.actionIcon} />
+            <MaterialCommunityIcons name="share-variant-outline" size={moderateScale(24)} color="#fff" style={styles.actionIcon} />
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
-          <MaterialCommunityIcons name="bookmark-outline" size={26} color="#fff" />
+          <MaterialCommunityIcons name="bookmark-outline" size={moderateScale(26)} color="#fff" />
         </TouchableOpacity>
       </View>
 
@@ -71,30 +72,30 @@ export const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 15,
+    marginBottom: verticalScale(15),
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 12,
+    padding: scale(12),
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: scale(32),
+    height: scale(32),
+    borderRadius: scale(16),
     backgroundColor: '#222',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: scale(10),
   },
   userName: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: 'bold',
   },
   mediaContainer: {
@@ -109,48 +110,48 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     color: '#333',
-    marginTop: 10,
+    marginTop: verticalScale(10),
   },
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(10),
   },
   actionsLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   actionIcon: {
-    marginRight: 15,
+    marginRight: scale(15),
   },
   content: {
-    paddingHorizontal: 12,
+    paddingHorizontal: scale(12),
   },
   likesText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: 'bold',
   },
   captionContainer: {
     flexDirection: 'row',
-    marginTop: 5,
+    marginTop: verticalScale(5),
     flexWrap: 'wrap',
   },
   userNameCaption: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: 'bold',
-    marginRight: 5,
+    marginRight: scale(5),
   },
   captionText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: moderateScale(14),
   },
   timeText: {
     color: '#888',
-    fontSize: 12,
-    marginTop: 5,
+    fontSize: moderateScale(12),
+    marginTop: verticalScale(5),
   },
 });

@@ -13,6 +13,8 @@ export interface Reel {
   shares: number;
   createdAt: string;
   liked?: boolean;
+  musicTitle?: string;
+  filter?: string;
 }
 
 export interface User {
@@ -66,4 +68,16 @@ export interface NetworkStatus {
   isConnectedToMesh: boolean;
   connectedNodes: number;
   meshNodeId: string;
+}
+
+export interface Notification {
+  id: string;
+  type: 'like' | 'follow';
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  reelId?: string;
+  reelTitle?: string;
+  timestamp: string;
+  read: boolean;
 }

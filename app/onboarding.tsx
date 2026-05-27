@@ -11,6 +11,7 @@ import {
     View,
 } from 'react-native';
 import { useListagramStore } from '../src/store';
+import { moderateScale, scale, verticalScale } from '../src/utils/responsive';
 
 export default function OnboardingScreen() {
   const [name, setName] = useState('');
@@ -34,7 +35,7 @@ export default function OnboardingScreen() {
     >
       <View style={styles.inner}>
         <View style={styles.logoContainer}>
-          <MaterialCommunityIcons name="instagram" size={100} color="#fff" />
+          <MaterialCommunityIcons name="instagram" size={scale(100)} color="#fff" />
           <Text style={styles.logoText}>Listagram</Text>
           <Text style={styles.tagline}>Capturing moments, even offline.</Text>
         </View>
@@ -77,48 +78,48 @@ const styles = StyleSheet.create({
   inner: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: scale(30),
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: verticalScale(50),
   },
   logoText: {
     color: '#fff',
-    fontSize: 40,
+    fontSize: moderateScale(40),
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: verticalScale(10),
     fontStyle: 'italic',
   },
   tagline: {
     color: '#888',
-    fontSize: 16,
-    marginTop: 8,
+    fontSize: moderateScale(16),
+    marginTop: verticalScale(8),
   },
   form: {
     width: '100%',
   },
   label: {
     color: '#fff',
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: moderateScale(18),
+    marginBottom: verticalScale(15),
     fontWeight: '600',
   },
   input: {
     backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    borderRadius: moderateScale(12),
+    paddingVertical: verticalScale(15),
+    paddingHorizontal: scale(20),
     color: '#fff',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     borderWidth: 1,
     borderColor: '#333',
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   button: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingVertical: 15,
+    borderRadius: moderateScale(12),
+    paddingVertical: verticalScale(15),
     alignItems: 'center',
     shadowColor: '#fff',
     shadowOffset: { width: 0, height: 4 },
@@ -131,19 +132,19 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#000',
-    fontSize: 18,
+    fontSize: moderateScale(18),
     fontWeight: 'bold',
   },
   footer: {
     position: 'absolute',
-    bottom: 40,
-    left: 30,
-    right: 30,
+    bottom: verticalScale(40),
+    left: scale(30),
+    right: scale(30),
     alignItems: 'center',
   },
   footerText: {
     color: '#555',
-    fontSize: 12,
+    fontSize: moderateScale(12),
     textAlign: 'center',
   },
 });
