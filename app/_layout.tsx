@@ -47,7 +47,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const { isRegistered } = useListagramStore();
+  const { isLoggedIn } = useListagramStore();
 
   useEffect(() => {
     initializeMeshSubscription();
@@ -56,7 +56,7 @@ export default function RootLayout() {
   return (
     <ErrorBoundary>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {!isRegistered ? (
+        {!isLoggedIn ? (
           <OnboardingScreen />
         ) : (
           <Stack>

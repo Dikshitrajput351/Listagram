@@ -19,24 +19,26 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Top Header */}
+      {/* Top Header - Using a 3-column layout for perfect centering and container protection */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/upload')}>
-          <MaterialCommunityIcons name="plus-box-outline" size={moderateScale(28)} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.headerLeft}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/upload')}>
+            <MaterialCommunityIcons name="plus-box-outline" size={moderateScale(26)} color="#fff" />
+          </TouchableOpacity>
+        </View>
         
         <View style={styles.logoContainer}>
           <Text style={styles.logoText}>Listagram</Text>
         </View>
 
-        <View style={styles.headerIcons}>
+        <View style={styles.headerRight}>
           <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/notifications')}>
             <MaterialCommunityIcons name="heart-outline" size={moderateScale(26)} color="#fff" />
             {unreadNotifications > 0 && (
               <View style={styles.badge} />
             )}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButtonRight} onPress={() => router.push('/messages')}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/messages')}>
             <MaterialCommunityIcons name="facebook-messenger" size={moderateScale(26)} color="#fff" />
           </TouchableOpacity>
         </View>
@@ -75,40 +77,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: scale(15),
-    paddingVertical: verticalScale(10),
+    paddingHorizontal: scale(10),
+    height: verticalScale(50),
     backgroundColor: '#000',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#111',
+  },
+  headerLeft: {
+    width: scale(40),
+    justifyContent: 'center',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: scale(80),
+    gap: scale(12),
   },
   logoContainer: {
-    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
     alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: -1, // Ensures icons are clickable even if logo container overlaps
   },
   logoText: {
     color: '#fff',
-    fontSize: moderateScale(24),
+    fontSize: moderateScale(22),
     fontWeight: 'bold',
     fontStyle: 'italic',
   },
-  headerIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   iconButton: {
-    padding: scale(2),
-  },
-  iconButtonRight: {
-    marginLeft: scale(15),
-    padding: scale(2),
+    padding: scale(4),
   },
   badge: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    width: scale(10),
-    height: scale(10),
-    borderRadius: scale(5),
+    top: scale(2),
+    right: scale(2),
+    width: scale(8),
+    height: scale(8),
+    borderRadius: scale(4),
     backgroundColor: '#ff3d00',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#000',
   },
   emptyContainer: {

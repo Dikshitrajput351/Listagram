@@ -30,11 +30,13 @@ interface ListagramStore {
   // Upload state
   isUploading: boolean;
   isRegistered: boolean;
+  isLoggedIn: boolean;
   stories: User[];
 
   // Actions
   loadReels: (limit?: number) => Promise<void>;
   setRegistered: (status: boolean) => void;
+  setLoggedIn: (status: boolean) => void;
   setCurrentReelIndex: (index: number) => void;
   likeReel: (reelId: string) => Promise<void>;
   unlikeReel: (reelId: string) => Promise<void>;
@@ -43,6 +45,8 @@ interface ListagramStore {
   toggleFollowUser: (userId: string) => void;
   switchAccount: (userId: string) => void;
   createAccount: (name: string) => void;
+  login: (email: string, password?: string) => Promise<boolean>;
+  signup: (name: string, email: string, password?: string) => Promise<boolean>;
   startConversation: (participantId: string) => void;
   setCurrentConversationId: (conversationId: string | null) => void;
   setMessageDraft: (text: string) => void;
@@ -91,6 +95,7 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
   ],
   isUploading: false,
   isRegistered: false,
+  isLoggedIn: false,
   stories: messageService.getUsers(),
 
   loadReels: async (limit = 10) => {
@@ -106,6 +111,10 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
 
   setRegistered: (status: boolean) => {
     set({ isRegistered: status });
+  },
+
+  setLoggedIn: (status: boolean) => {
+    set({ isLoggedIn: status });
   },
 
   setCurrentReelIndex: (index: number) => {
@@ -171,6 +180,35 @@ export const useListagramStore = create<ListagramStore>((set, get) => ({
       accounts: messageService.getAccounts(),
       users: messageService.getUsers(),
     });
+  },
+
+  login: async (email, _password) => {
+    // Mock login logic: check if user exists by email/name
+    const users = get().users;
+    const existingUser = users.find(u => u.id === email || u.name.toLowerCase().includes(email.toLowerCase()));
+    
+    if (existingUser) {
+      set({ 
+        currentUser: existingUser,
+        isLoggedIn: true,
+        isRegistered: true 
+      });
+      return true;
+    }
+    return false;
+  },
+
+  signup: async (name, email, _password) => {
+    // Mock signup logic: create a new account
+    const newUser = messageService.createAccount(name);
+    set({
+      currentUser: newUser,
+      isLoggedIn: true,
+      isRegistered: true,
+      accounts: messageService.getAccounts(),
+      users: messageService.getUsers(),
+    });
+    return true;
   },
 
   toggleFollowUser: (userId: string) => {

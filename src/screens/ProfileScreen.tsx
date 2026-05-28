@@ -30,30 +30,32 @@ export const ProfileScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
+      {/* Header - Fixed to match Home Screen for consistency and overflow protection */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerTitleContainer} onPress={() => {
-          if (accounts.length > 1) {
-            // Simple switch for demo
-            const nextIndex = (accounts.findIndex(a => a.id === currentUser.id) + 1) % accounts.length;
-            switchAccount(accounts[nextIndex].id);
-          }
-        }}>
-          <Text style={styles.headerTitle}>{currentUser.name}</Text>
-          <MaterialCommunityIcons name="chevron-down" size={moderateScale(18)} color="#fff" />
-        </TouchableOpacity>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.headerIcon} onPress={() => router.push('/upload')}>
-            <MaterialCommunityIcons name="plus-box-outline" size={moderateScale(28)} color="#fff" />
+        <View style={styles.headerLeft}>
+          <TouchableOpacity style={styles.headerTitleContainer} onPress={() => {
+            if (accounts.length > 1) {
+              const nextIndex = (accounts.findIndex(a => a.id === currentUser.id) + 1) % accounts.length;
+              switchAccount(accounts[nextIndex].id);
+            }
+          }}>
+            <Text style={styles.headerTitle} numberOfLines={1}>{currentUser.name}</Text>
+            <MaterialCommunityIcons name="chevron-down" size={moderateScale(16)} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.headerIcon} onPress={() => router.push('/notifications')}>
-            <MaterialCommunityIcons name="heart-outline" size={moderateScale(28)} color="#fff" />
+        </View>
+
+        <View style={styles.headerRight}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/upload')}>
+            <MaterialCommunityIcons name="plus-box-outline" size={moderateScale(26)} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/notifications')}>
+            <MaterialCommunityIcons name="heart-outline" size={moderateScale(26)} color="#fff" />
             {unreadNotifications > 0 && (
               <View style={styles.badge} />
             )}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.headerIcon}>
-            <MaterialCommunityIcons name="menu" size={moderateScale(28)} color="#fff" />
+          <TouchableOpacity style={styles.iconButton}>
+            <MaterialCommunityIcons name="menu" size={moderateScale(26)} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
@@ -143,35 +145,44 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: scale(16),
-    paddingVertical: verticalScale(10),
+    paddingHorizontal: scale(12),
+    height: verticalScale(50),
+    backgroundColor: '#000',
+  },
+  headerLeft: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: scale(15),
   },
   headerTitleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    maxWidth: '100%',
   },
   headerTitle: {
     color: '#fff',
-    fontSize: moderateScale(22),
+    fontSize: moderateScale(20),
     fontWeight: 'bold',
+    marginRight: scale(4),
   },
-  headerIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerIcon: {
-    marginLeft: scale(15),
+  iconButton: {
+    padding: scale(4),
     position: 'relative',
   },
   badge: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    width: scale(10),
-    height: scale(10),
-    borderRadius: scale(5),
+    top: scale(2),
+    right: scale(2),
+    width: scale(8),
+    height: scale(8),
+    borderRadius: scale(4),
     backgroundColor: '#ff3d00',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#000',
   },
   profileInfo: {
@@ -184,9 +195,9 @@ const styles = StyleSheet.create({
     marginRight: scale(30),
   },
   avatar: {
-    width: scale(86),
-    height: scale(86),
-    borderRadius: scale(43),
+    width: scale(80),
+    height: scale(80),
+    borderRadius: scale(40),
     backgroundColor: '#262626',
     justifyContent: 'center',
     alignItems: 'center',
@@ -197,7 +208,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingRight: scale(10),
   },
   statItem: {
     alignItems: 'center',
@@ -209,7 +219,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     color: '#fff',
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(13),
   },
   bioContainer: {
     paddingHorizontal: scale(16),
@@ -233,15 +243,15 @@ const styles = StyleSheet.create({
   },
   mainButton: {
     flex: 1,
-    height: verticalScale(35),
+    height: verticalScale(32),
     backgroundColor: '#262626',
     borderRadius: scale(8),
     justifyContent: 'center',
     alignItems: 'center',
   },
   smallButton: {
-    width: verticalScale(35),
-    height: verticalScale(35),
+    width: verticalScale(32),
+    height: verticalScale(32),
     backgroundColor: '#262626',
     borderRadius: scale(8),
     justifyContent: 'center',
@@ -249,7 +259,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(13),
     fontWeight: '600',
   },
   tabsContainer: {

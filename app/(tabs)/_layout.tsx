@@ -9,38 +9,36 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#fff',
         tabBarInactiveTintColor: '#888',
         headerShown: false,
+        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#1a1a1a',
           borderTopColor: '#333',
           borderTopWidth: 1,
+          height: moderateScale(60),
         },
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="home-variant" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(30)} name="home-variant" color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="magnify" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(30)} name="magnify" color={color} />,
         }}
       />
       <Tabs.Screen
         name="reels"
         options={{
-          title: 'Reels',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="movie-play-outline" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(30)} name="movie-play-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(28)} name="account-circle-outline" color={color} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons size={moderateScale(30)} name="account-circle-outline" color={color} />,
         }}
       />
       <Tabs.Screen
